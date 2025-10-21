@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bin/rails:*)",
+      "Bash(bin/dev:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git log:*)",
+      "Bash(rails new:*)",
+      "Bash(rails --version)",
+      "Bash(ruby --version)",
+      "Bash(bundle install:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(bundle info:*)",
+      "Read(//c/Ruby34-x64/lib/ruby/gems/3.4.0/gems/mcp-0.4.0/lib/mcp/**)",
+      "Bash(timeout 5 bin/rails mcp:server:*)",
+      "Bash(ruby bin/rails:*)",
+      "Bash(bundle:*)",
+      "Bash(ruby:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

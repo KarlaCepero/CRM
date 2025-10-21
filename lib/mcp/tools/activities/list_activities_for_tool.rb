@@ -1,0 +1,62 @@
+# frozen_string_literal: true
+
+module Mcp
+  module Tools
+    module Activities
+      class ListActivitiesForTool < MCP::Tool
+        description "List activities for a specific company, contact, or deal"
+
+        input_schema(
+          type: "object",
+          properties: {
+            type: {
+              type: "string",
+              description: "The type of entity (Company, Contact, or Deal)",
+              enum: ["Company", "Contact", "Deal"]
+            },
+            id: {
+              type: "integer",
+              description: "The ID of the entity"
+            }
+          },
+          required: ["type", "id"]
+        )
+
+        def self.call(type:, id:, server_context:)
+          start_time = Time.current
+
+          begin
+            activities = Mcp::QueryBuilders::ActivityQueryBuilder.list_for_activitable(
+              type: type,
+              id: id
+            )
+
+            data = Mcp::Serializers::ActivitySerializer.serialize_collection(activities)
+
+            latency_ms = ((Time.current - start_time) * 1000).round(2)
+            Mcp::Logger.log_tool_execution(
+              tool_name: "list_activities_for",
+              params: { type: type, id: id },
+              latency_ms: latency_ms,
+              success: true
+            )
+
+            result = {
+              activities: data,
+              total: activities.size,
+              type: type,
+              id: id
+            }
+
+            MCP::Tool::Response.new([
+              { type: "text", text: JSON.pretty_generate(result) }
+            ])
+          rescue => e
+            Mcp::Logger.log_error(e, tool: "list_activities_for", params: { type: type, id: id })
+            raise
+          end
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,1253 @@
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='Crm'*/[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='Crm'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='Crm'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2025-10-09 18:24:16.174935', '2025-10-09 18:24:16.174942') RETURNING "key" /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+Migrating to CreateCompanies (20251009182150)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "companies" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "phone" varchar, "address" text, "website" varchar, "industry" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251009182150') RETURNING "version" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+Migrating to CreateContacts (20251009182216)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[35m (3.3ms)[0m  [1m[35mCREATE TABLE "contacts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar, "last_name" varchar, "email" varchar, "phone" varchar, "position" varchar, "company_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_42b4583938"
+FOREIGN KEY ("company_id")
+  REFERENCES "companies" ("id")
+) /*application='Crm'*/[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE INDEX "index_contacts_on_company_id" ON "contacts" ("company_id") /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251009182216') RETURNING "version" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+Migrating to CreateDeals (20251009182241)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE TABLE "deals" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "amount" decimal, "stage" varchar, "expected_close_date" date, "contact_id" integer NOT NULL, "company_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_516be0baca"
+FOREIGN KEY ("contact_id")
+  REFERENCES "contacts" ("id")
+, CONSTRAINT "fk_rails_54fedd9a8b"
+FOREIGN KEY ("company_id")
+  REFERENCES "companies" ("id")
+) /*application='Crm'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_deals_on_contact_id" ON "deals" ("contact_id") /*application='Crm'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_deals_on_company_id" ON "deals" ("company_id") /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251009182241') RETURNING "version" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (3.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+Migrating to CreateActivities (20251009182313)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[35m (11.1ms)[0m  [1m[35mCREATE TABLE "activities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "activity_type" varchar, "description" text, "due_date" datetime(6), "status" varchar, "activitable_type" varchar NOT NULL, "activitable_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='Crm'*/[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_activities_on_activitable" ON "activities" ("activitable_type", "activitable_id") /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251009182313') RETURNING "version" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+Migrating to CreateNotes (20251009182343)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[35m (4.2ms)[0m  [1m[35mCREATE TABLE "notes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "content" text, "notable_type" varchar NOT NULL, "notable_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='Crm'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_notes_on_notable" ON "notes" ("notable_type", "notable_id") /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251009182343') RETURNING "version" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+  [1m[36mNote Load (0.2ms)[0m  [1m[34mSELECT "notes".* FROM "notes" /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.3ms)[0m  [1m[34mSELECT "activities".* FROM "activities" /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.3ms)[0m  [1m[34mSELECT "deals".* FROM "deals" /*application='Crm'*/[0m
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" /*application='Crm'*/[0m
+  [1m[36mCompany Load (0.3ms)[0m  [1m[34mSELECT "companies".* FROM "companies" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (10.3ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Tech Solutions Inc', 'contact@techsolutions.com', '+1-555-0101', '123 Tech Street, San Francisco, CA 94105', 'https://techsolutions.com', 'Technology', '2025-10-09 18:31:22.380686', '2025-10-09 18:31:22.380686') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (4.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (7.7ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Global Marketing Group', 'info@globalmarketing.com', '+1-555-0102', '456 Marketing Ave, New York, NY 10001', 'https://globalmarketing.com', 'Marketing', '2025-10-09 18:31:22.405580', '2025-10-09 18:31:22.405580') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (10.1ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Finance Partners LLC', 'contact@financepartners.com', '+1-555-0103', '789 Finance Blvd, Chicago, IL 60601', 'https://financepartners.com', 'Finance', '2025-10-09 18:31:22.427822', '2025-10-09 18:31:22.427822') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (14.8ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Healthcare Innovations', 'hello@healthcareinnovations.com', '+1-555-0104', '321 Health Dr, Boston, MA 02101', 'https://healthcareinnovations.com', 'Healthcare', '2025-10-09 18:31:22.482811', '2025-10-09 18:31:22.482811') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (3.6ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Retail Express Co', 'support@retailexpress.com', '+1-555-0105', '654 Retail Way, Los Angeles, CA 90001', 'https://retailexpress.com', 'Retail', '2025-10-09 18:31:22.515132', '2025-10-09 18:31:22.515132') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.8ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('John', 'Smith', 'john.smith@techsolutions.com', '+1-555-1001', 'CEO', 1, '2025-10-09 18:31:22.642265', '2025-10-09 18:31:22.642265') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.4ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Sarah', 'Johnson', 'sarah.johnson@techsolutions.com', '+1-555-1002', 'CTO', 1, '2025-10-09 18:31:22.652159', '2025-10-09 18:31:22.652159') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.8ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Michael', 'Williams', 'michael.williams@globalmarketing.com', '+1-555-1003', 'Marketing Director', 2, '2025-10-09 18:31:22.658651', '2025-10-09 18:31:22.658651') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (3.3ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Emily', 'Brown', 'emily.brown@globalmarketing.com', '+1-555-1004', 'Account Manager', 2, '2025-10-09 18:31:22.663842', '2025-10-09 18:31:22.663842') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.0ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('David', 'Jones', 'david.jones@financepartners.com', '+1-555-1005', 'CFO', 3, '2025-10-09 18:31:22.670748', '2025-10-09 18:31:22.670748') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.8ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Lisa', 'Davis', 'lisa.davis@financepartners.com', '+1-555-1006', 'Financial Advisor', 3, '2025-10-09 18:31:22.676482', '2025-10-09 18:31:22.676482') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.2ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Robert', 'Miller', 'robert.miller@healthcareinnovations.com', '+1-555-1007', 'Operations Manager', 4, '2025-10-09 18:31:22.683737', '2025-10-09 18:31:22.683737') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.5ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Jennifer', 'Wilson', 'jennifer.wilson@retailexpress.com', '+1-555-1008', 'Sales Director', 5, '2025-10-09 18:31:22.702054', '2025-10-09 18:31:22.702054') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (2.6ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Enterprise Software License', 50000.0, 'proposal', '2025-11-08', 1, 1, '2025-10-09 18:31:22.713671', '2025-10-09 18:31:22.713671') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (2.1ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Cloud Infrastructure Setup', 75000.0, 'negotiation', '2025-11-23', 2, 1, '2025-10-09 18:31:22.721771', '2025-10-09 18:31:22.721771') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.9ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Marketing Campaign Q1', 35000.0, 'qualification', '2025-10-29', 3, 2, '2025-10-09 18:31:22.727548', '2025-10-09 18:31:22.727548') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (2.1ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Annual Marketing Retainer', 120000.0, 'closed_won', '2025-10-04', 4, 2, '2025-10-09 18:31:22.732867', '2025-10-09 18:31:22.732867') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.8ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Financial Consulting Services', 25000.0, 'lead', '2025-12-08', 5, 3, '2025-10-09 18:31:22.739852', '2025-10-09 18:31:22.739852') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.8ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Audit Services', 40000.0, 'proposal', '2025-11-13', 6, 3, '2025-10-09 18:31:22.745337', '2025-10-09 18:31:22.745337') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.8ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Healthcare Management System', 95000.0, 'negotiation', '2025-11-18', 7, 4, '2025-10-09 18:31:22.751523', '2025-10-09 18:31:22.751523') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.8ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Retail POS System', 60000.0, 'closed_won', '2025-09-29', 8, 5, '2025-10-09 18:31:22.763375', '2025-10-09 18:31:22.763375') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.9ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Inventory Management Software', 45000.0, 'closed_lost', '2025-09-24', 8, 5, '2025-10-09 18:31:22.774117', '2025-10-09 18:31:22.774117') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.0ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('call', 'Follow up call about Enterprise Software License proposal', '2025-10-11 18:31:22.781435', 'pending', 'Deal', 1, '2025-10-09 18:31:22.827592', '2025-10-09 18:31:22.827592') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.1ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('meeting', 'Demo presentation for Cloud Infrastructure', '2025-10-14 18:31:22.781618', 'pending', 'Deal', 2, '2025-10-09 18:31:22.836676', '2025-10-09 18:31:22.836676') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (1.7ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('email', 'Send marketing campaign proposal', '2025-10-10 18:31:22.781668', 'pending', 'Deal', 3, '2025-10-09 18:31:22.842559', '2025-10-09 18:31:22.842559') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (1.7ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('task', 'Prepare contract documents', '2025-10-12 18:31:22.781699', 'pending', 'Deal', 6, '2025-10-09 18:31:22.847900', '2025-10-09 18:31:22.847900') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (1.8ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('call', 'Introduction call with new lead', '2025-10-09 18:31:22.781727', 'pending', 'Company', 3, '2025-10-09 18:31:22.853326', '2025-10-09 18:31:22.853326') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.0ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('meeting', 'Quarterly business review', '2025-10-16 18:31:22.781731', 'pending', 'Company', 1, '2025-10-09 18:31:22.859222', '2025-10-09 18:31:22.859222') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.0ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('email', 'Send thank you email after meeting', '2025-10-08 18:31:22.781759', 'completed', 'Contact', 1, '2025-10-09 18:31:22.868932', '2025-10-09 18:31:22.868932') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (1.8ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('call', 'Check-in call with client', '2025-10-07 18:31:22.781789', 'completed', 'Contact', 4, '2025-10-09 18:31:22.875799', '2025-10-09 18:31:22.875799') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (2.0ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Client expressed strong interest in enterprise features. Mentioned they have budget approved for Q1.', 'Deal', 1, '2025-10-09 18:31:22.884436', '2025-10-09 18:31:22.884436') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (2.0ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Need to follow up on technical requirements. CTO wants to see scalability benchmarks.', 'Deal', 2, '2025-10-09 18:31:22.890262', '2025-10-09 18:31:22.890262') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (2.0ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Company is expanding to 3 new markets this year. Great opportunity for additional services.', 'Company', 1, '2025-10-09 18:31:22.896171', '2025-10-09 18:31:22.896171') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (4.4ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Contact mentioned they''re evaluating 2 other vendors. Need to emphasize our unique value proposition.', 'Contact', 3, '2025-10-09 18:31:22.902058', '2025-10-09 18:31:22.902058') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (4.3ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Meeting went very well. They want to move forward with the proposal. Waiting on legal review.', 'Deal', 4, '2025-10-09 18:31:22.912912', '2025-10-09 18:31:22.912912') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (6.0ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Client requested case studies from similar healthcare organizations.', 'Deal', 7, '2025-10-09 18:31:22.928175', '2025-10-09 18:31:22.928175') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (4.3ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Lost deal due to budget constraints. Keep warm for potential opportunity next quarter.', 'Deal', 9, '2025-10-09 18:31:22.951306', '2025-10-09 18:31:22.951306') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (1.8ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('New decision maker introduced. Need to schedule separate meeting to present our solution.', 'Company', 4, '2025-10-09 18:31:22.960408', '2025-10-09 18:31:22.960408') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*application='Crm'*/[0m
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*application='Crm'*/[0m
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*application='Crm'*/[0m
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*application='Crm'*/[0m
+  [1m[36mNote Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "notes" /*application='Crm'*/[0m
+Started GET "/" for ::1 at 2025-10-09 20:33:29 +0200
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (7.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.3ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.3ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.4ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (1.8ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.4ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.5ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 191.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 209.3ms | GC: 0.0ms)
+Completed 200 OK in 1162ms (Views: 244.1ms | ActiveRecord: 21.4ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies/5" for ::1 at 2025-10-09 20:34:59 +0200
+Processing by CompaniesController#show as HTML
+  Parameters: {"id" => "5"}
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = 5 LIMIT 1 /*action='show',application='Crm',controller='companies'*/[0m
+  ↳ app/controllers/companies_controller.rb:63:in 'CompaniesController#set_company'
+  Rendering layout layouts/application.html.erb
+  Rendering companies/show.html.erb within layouts/application
+  Rendered companies/_company.html.erb (Duration: 0.8ms | GC: 0.0ms)
+  Rendered companies/show.html.erb within layouts/application (Duration: 106.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 108.2ms | GC: 0.0ms)
+Completed 200 OK in 714ms (Views: 113.8ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies/5" for ::1 at 2025-10-09 20:35:24 +0200
+Processing by CompaniesController#show as HTML
+  Parameters: {"id" => "5"}
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = 5 LIMIT 1 /*action='show',application='Crm',controller='companies'*/[0m
+  ↳ app/controllers/companies_controller.rb:63:in 'CompaniesController#set_company'
+  Rendering layout layouts/application.html.erb
+  Rendering companies/show.html.erb within layouts/application
+  Rendered companies/_company.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered companies/show.html.erb within layouts/application (Duration: 1.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.0ms | GC: 0.0ms)
+Completed 200 OK in 636ms (Views: 8.9ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies/5" for ::1 at 2025-10-09 20:37:06 +0200
+Processing by CompaniesController#show as HTML
+  Parameters: {"id" => "5"}
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = 5 LIMIT 1 /*action='show',application='Crm',controller='companies'*/[0m
+  ↳ app/controllers/companies_controller.rb:63:in 'CompaniesController#set_company'
+  Rendering layout layouts/application.html.erb
+  Rendering companies/show.html.erb within layouts/application
+  Rendered companies/_company.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered companies/show.html.erb within layouts/application (Duration: 2.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.2ms | GC: 0.0ms)
+Completed 200 OK in 568ms (Views: 5.1ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-09 20:37:26 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.2ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.3ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 135.7ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 137.3ms | GC: 0.2ms)
+Completed 200 OK in 664ms (Views: 136.8ms | ActiveRecord: 1.9ms (14 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/" for ::1 at 2025-10-09 20:40:53 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (2.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.3ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.3ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.4ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 53.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 104.8ms | GC: 0.0ms)
+Completed 500 Internal Server Error in 911ms (ActiveRecord: 6.9ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActionView::Template::Error (The asset 'tailwind.css' was not found in the load path.)
+Caused by: Propshaft::MissingAssetError (The asset 'tailwind.css' was not found in the load path.)
+
+Information for: ActionView::Template::Error (The asset 'tailwind.css' was not found in the load path.):
+    18:     <link rel="apple-touch-icon" href="/icon.png">
+    19: 
+    20:     <%# Includes all stylesheet files in app/assets/stylesheets %>
+    21:     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    22:   </head>
+    23: 
+    24:   <body class="bg-gray-50">
+  
+app/views/layouts/application.html.erb:21
+
+Information for cause: Propshaft::MissingAssetError (The asset 'tailwind.css' was not found in the load path.):
+  
+app/views/layouts/application.html.erb:21
+Started GET "/favicon.ico" for ::1 at 2025-10-09 20:40:57 +0200
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+Started GET "/" for ::1 at 2025-10-09 20:44:25 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (1.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.9ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (1.4ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 32.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 33.7ms | GC: 0.0ms)
+Completed 200 OK in 486ms (Views: 161.1ms | ActiveRecord: 6.3ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-09 20:44:28 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.2ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.1ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 10.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 11.5ms | GC: 0.0ms)
+Completed 200 OK in 301ms (Views: 11.2ms | ActiveRecord: 1.1ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-09 20:45:43 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (4.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.3ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 33.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 35.6ms | GC: 0.0ms)
+Completed 200 OK in 413ms (Views: 41.0ms | ActiveRecord: 8.2ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies" for ::1 at 2025-10-09 20:45:51 +0200
+Processing by CompaniesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering companies/index.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='index',application='Crm',controller='companies'*/[0m
+  ↳ app/views/companies/index.html.erb:14
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" /*action='index',application='Crm',controller='companies'*/[0m
+  ↳ app/views/companies/index.html.erb:15
+  Rendered companies/_company.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered companies/index.html.erb within layouts/application (Duration: 12.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 13.7ms | GC: 0.0ms)
+Completed 200 OK in 563ms (Views: 17.0ms | ActiveRecord: 0.3ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-09 20:45:54 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.2ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.3ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.4ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 19.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 20.4ms | GC: 0.0ms)
+Completed 200 OK in 573ms (Views: 19.6ms | ActiveRecord: 2.3ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/deals" for ::1 at 2025-10-09 20:46:08 +0200
+Processing by DealsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering deals/index.html.erb within layouts/application
+  [1m[36mDeal Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='index',application='Crm',controller='deals'*/[0m
+  ↳ app/views/deals/index.html.erb:14
+  [1m[36mDeal Load (0.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" /*action='index',application='Crm',controller='deals'*/[0m
+  ↳ app/views/deals/index.html.erb:15
+  Rendered deals/_deal.html.erb (Duration: 0.6ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered deals/_deal.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered deals/index.html.erb within layouts/application (Duration: 17.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 18.6ms | GC: 0.0ms)
+Completed 200 OK in 535ms (Views: 22.3ms | ActiveRecord: 0.3ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/deals/1" for ::1 at 2025-10-09 20:46:12 +0200
+Processing by DealsController#show as HTML
+  Parameters: {"id" => "1"}
+  [1m[36mDeal Load (0.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."id" = 1 LIMIT 1 /*action='show',application='Crm',controller='deals'*/[0m
+  ↳ app/controllers/deals_controller.rb:63:in 'DealsController#set_deal'
+  Rendering layout layouts/application.html.erb
+  Rendering deals/show.html.erb within layouts/application
+  Rendered deals/_deal.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered deals/show.html.erb within layouts/application (Duration: 3.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.2ms | GC: 0.0ms)
+Completed 200 OK in 584ms (Views: 6.3ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-09 20:46:16 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.1ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.3ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.2ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 17.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 18.2ms | GC: 0.0ms)
+Completed 200 OK in 659ms (Views: 17.7ms | ActiveRecord: 1.6ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+Migrating to AddIndexesForMcp (20251016172839)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE INDEX "index_companies_on_name" ON "companies" ("name") /*application='Crm'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_companies_on_email" ON "companies" ("email") /*application='Crm'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_contacts_on_first_name" ON "contacts" ("first_name") /*application='Crm'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_contacts_on_last_name" ON "contacts" ("last_name") /*application='Crm'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_contacts_on_email" ON "contacts" ("email") /*application='Crm'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_deals_on_stage" ON "deals" ("stage") /*application='Crm'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_deals_on_created_at" ON "deals" ("created_at") /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251016172839') RETURNING "version" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (4.5ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+[MCP] Registered 16 tools
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+Started GET "/" for ::1 at 2025-10-21 09:50:30 +0200
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (1.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.3ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.3ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.2ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 73.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 77.6ms | GC: 0.0ms)
+Completed 200 OK in 1269ms (Views: 119.8ms | ActiveRecord: 6.3ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies" for ::1 at 2025-10-21 09:50:35 +0200
+Processing by CompaniesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering companies/index.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='index',application='Crm',controller='companies'*/[0m
+  ↳ app/views/companies/index.html.erb:14
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" /*action='index',application='Crm',controller='companies'*/[0m
+  ↳ app/views/companies/index.html.erb:15
+  Rendered companies/_company.html.erb (Duration: 0.7ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered companies/_company.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered companies/index.html.erb within layouts/application (Duration: 109.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 109.4ms | GC: 0.0ms)
+Completed 200 OK in 331ms (Views: 110.7ms | ActiveRecord: 0.4ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies/1" for ::1 at 2025-10-21 09:50:40 +0200
+Processing by CompaniesController#show as HTML
+  Parameters: {"id" => "1"}
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = 1 LIMIT 1 /*action='show',application='Crm',controller='companies'*/[0m
+  ↳ app/controllers/companies_controller.rb:63:in 'CompaniesController#set_company'
+  Rendering layout layouts/application.html.erb
+  Rendering companies/show.html.erb within layouts/application
+  Rendered companies/_company.html.erb (Duration: 0.0ms | GC: 0.0ms)
+  Rendered companies/show.html.erb within layouts/application (Duration: 1.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.3ms | GC: 0.0ms)
+Completed 200 OK in 211ms (Views: 2.8ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/companies/new" for ::1 at 2025-10-21 09:50:43 +0200
+Processing by CompaniesController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering companies/new.html.erb within layouts/application
+  Rendered companies/_form.html.erb (Duration: 2.0ms | GC: 0.0ms)
+  Rendered companies/new.html.erb within layouts/application (Duration: 4.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.8ms | GC: 0.0ms)
+Completed 200 OK in 283ms (Views: 5.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/companies" for ::1 at 2025-10-21 09:50:45 +0200
+Processing by CompaniesController#create as HTML
+  Parameters: {"authenticity_token" => "[FILTERED]", "commit" => "Create Company"}
+  Rendering layout layouts/application.html.erb
+  Rendering companies/new.html.erb within layouts/application
+  Rendered companies/_form.html.erb (Duration: 1.1ms | GC: 0.0ms)
+  Rendered companies/new.html.erb within layouts/application (Duration: 1.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.1ms | GC: 0.0ms)
+Completed 422 Unprocessable Content in 227ms (Views: 2.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/companies" for ::1 at 2025-10-21 09:50:50 +0200
+Processing by CompaniesController#create as HTML
+  Parameters: {"authenticity_token" => "[FILTERED]", "commit" => "Create Company"}
+  Rendering layout layouts/application.html.erb
+  Rendering companies/new.html.erb within layouts/application
+  Rendered companies/_form.html.erb (Duration: 0.7ms | GC: 0.0ms)
+  Rendered companies/new.html.erb within layouts/application (Duration: 1.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.4ms | GC: 0.0ms)
+Completed 422 Unprocessable Content in 243ms (Views: 1.8ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-21 09:50:51 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.1ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.1ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.2ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 13.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 14.2ms | GC: 0.0ms)
+Completed 200 OK in 261ms (Views: 13.9ms | ActiveRecord: 1.6ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Crm'*/[0m
+  [1m[36mNote Load (0.2ms)[0m  [1m[34mSELECT "notes".* FROM "notes" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (2.0ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 1 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (3.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.2ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 2 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.2ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 3 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.1ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 4 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.6ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 5 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.1ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 6 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.2ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 7 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Destroy (1.1ms)[0m  [1m[31mDELETE FROM "notes" WHERE "notes"."id" = 8 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.3ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 1 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.4ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 2 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.5ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 3 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.3ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 4 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (2.0ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 5 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.3ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 6 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.4ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 7 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Destroy (1.3ms)[0m  [1m[31mDELETE FROM "activities" WHERE "activities"."id" = 8 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.6ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 1 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.1ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 1 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.4ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 1 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.5ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 2 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 2 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 2 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.5ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 3 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 3 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 3 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.5ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 4 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 4 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 4 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.8ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 5 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 5 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 5 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.4ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 6 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 6 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 6 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.4ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 7 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 7 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.1ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 7 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.7ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 8 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 8 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 8 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Load (1.5ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 9 AND "activities"."activitable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 9 AND "notes"."notable_type" = 'Deal' /*application='Crm'*/[0m
+  [1m[36mDeal Destroy (0.0ms)[0m  [1m[31mDELETE FROM "deals" WHERE "deals"."id" = 9 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Load (0.1ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.5ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 1 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.0ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 1 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 1 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.1ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 1 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.5ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 2 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 2 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 2 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.2ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 2 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.5ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 3 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 3 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 3 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.0ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 3 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.5ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 4 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 4 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 4 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.1ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 4 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.4ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 5 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 5 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 5 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.1ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 5 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (2.2ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 6 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.0ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 6 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 6 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.1ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 6 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.4ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 7 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 7 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.1ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 7 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.1ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 7 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Load (1.4ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 8 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.0ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 8 AND "activities"."activitable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 8 AND "notes"."notable_type" = 'Contact' /*application='Crm'*/[0m
+  [1m[36mContact Destroy (0.0ms)[0m  [1m[31mDELETE FROM "contacts" WHERE "contacts"."id" = 8 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Load (0.1ms)[0m  [1m[34mSELECT "companies".* FROM "companies" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Load (1.5ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 1 /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.0ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 1 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.0ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 1 AND "activities"."activitable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 1 AND "notes"."notable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mCompany Destroy (0.1ms)[0m  [1m[31mDELETE FROM "companies" WHERE "companies"."id" = 1 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Load (1.5ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 2 /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.0ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 2 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.0ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 2 AND "activities"."activitable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.1ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 2 AND "notes"."notable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mCompany Destroy (0.1ms)[0m  [1m[31mDELETE FROM "companies" WHERE "companies"."id" = 2 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Load (1.5ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 3 /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.0ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 3 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 3 AND "activities"."activitable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 3 AND "notes"."notable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mCompany Destroy (0.1ms)[0m  [1m[31mDELETE FROM "companies" WHERE "companies"."id" = 3 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Load (1.4ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 4 /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 4 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 4 AND "activities"."activitable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.0ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 4 AND "notes"."notable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mCompany Destroy (0.1ms)[0m  [1m[31mDELETE FROM "companies" WHERE "companies"."id" = 4 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Load (2.8ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 5 /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 5 /*application='Crm'*/[0m
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."activitable_id" = 5 AND "activities"."activitable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mNote Load (0.1ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notable_id" = 5 AND "notes"."notable_type" = 'Company' /*application='Crm'*/[0m
+  [1m[36mCompany Destroy (0.1ms)[0m  [1m[31mDELETE FROM "companies" WHERE "companies"."id" = 5 /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (2.2ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Tech Solutions Inc', 'contact@techsolutions.com', '+1-555-0101', '123 Tech Street, San Francisco, CA 94105', 'https://techsolutions.com', 'Technology', '2025-10-21 07:52:19.163843', '2025-10-21 07:52:19.163843') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (2.8ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Global Marketing Group', 'info@globalmarketing.com', '+1-555-0102', '456 Marketing Ave, New York, NY 10001', 'https://globalmarketing.com', 'Marketing', '2025-10-21 07:52:19.169946', '2025-10-21 07:52:19.169946') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (3.1ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Finance Partners LLC', 'contact@financepartners.com', '+1-555-0103', '789 Finance Blvd, Chicago, IL 60601', 'https://financepartners.com', 'Finance', '2025-10-21 07:52:19.177718', '2025-10-21 07:52:19.177718') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (1.4ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Healthcare Innovations', 'hello@healthcareinnovations.com', '+1-555-0104', '321 Health Dr, Boston, MA 02101', 'https://healthcareinnovations.com', 'Healthcare', '2025-10-21 07:52:19.184631', '2025-10-21 07:52:19.184631') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Create (2.1ms)[0m  [1m[32mINSERT INTO "companies" ("name", "email", "phone", "address", "website", "industry", "created_at", "updated_at") VALUES ('Retail Express Co', 'support@retailexpress.com', '+1-555-0105', '654 Retail Way, Los Angeles, CA 90001', 'https://retailexpress.com', 'Retail', '2025-10-21 07:52:19.189444', '2025-10-21 07:52:19.189444') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.7ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('John', 'Smith', 'john.smith@techsolutions.com', '+1-555-1001', 'CEO', 6, '2025-10-21 07:52:19.228568', '2025-10-21 07:52:19.228568') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.0ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Sarah', 'Johnson', 'sarah.johnson@techsolutions.com', '+1-555-1002', 'CTO', 6, '2025-10-21 07:52:19.233886', '2025-10-21 07:52:19.233886') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (2.1ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Michael', 'Williams', 'michael.williams@globalmarketing.com', '+1-555-1003', 'Marketing Director', 7, '2025-10-21 07:52:19.239952', '2025-10-21 07:52:19.239952') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.4ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Emily', 'Brown', 'emily.brown@globalmarketing.com', '+1-555-1004', 'Account Manager', 7, '2025-10-21 07:52:19.245202', '2025-10-21 07:52:19.245202') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.5ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('David', 'Jones', 'david.jones@financepartners.com', '+1-555-1005', 'CFO', 8, '2025-10-21 07:52:19.249480', '2025-10-21 07:52:19.249480') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.4ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Lisa', 'Davis', 'lisa.davis@financepartners.com', '+1-555-1006', 'Financial Advisor', 8, '2025-10-21 07:52:19.254601', '2025-10-21 07:52:19.254601') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.3ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Robert', 'Miller', 'robert.miller@healthcareinnovations.com', '+1-555-1007', 'Operations Manager', 9, '2025-10-21 07:52:19.258699', '2025-10-21 07:52:19.258699') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mContact Create (1.9ms)[0m  [1m[32mINSERT INTO "contacts" ("first_name", "last_name", "email", "phone", "position", "company_id", "created_at", "updated_at") VALUES ('Jennifer', 'Wilson', 'jennifer.wilson@retailexpress.com', '+1-555-1008', 'Sales Director', 10, '2025-10-21 07:52:19.262657', '2025-10-21 07:52:19.262657') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.7ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Enterprise Software License', 50000.0, 'proposal', '2025-11-20', 9, 6, '2025-10-21 07:52:19.268609', '2025-10-21 07:52:19.268609') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.3ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Cloud Infrastructure Setup', 75000.0, 'negotiation', '2025-12-05', 10, 6, '2025-10-21 07:52:19.273585', '2025-10-21 07:52:19.273585') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.3ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Marketing Campaign Q1', 35000.0, 'qualification', '2025-11-10', 11, 7, '2025-10-21 07:52:19.277794', '2025-10-21 07:52:19.277794') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.4ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Annual Marketing Retainer', 120000.0, 'closed_won', '2025-10-16', 12, 7, '2025-10-21 07:52:19.281656', '2025-10-21 07:52:19.281656') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.6ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Financial Consulting Services', 25000.0, 'lead', '2025-12-20', 13, 8, '2025-10-21 07:52:19.287360', '2025-10-21 07:52:19.287360') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.4ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Audit Services', 40000.0, 'proposal', '2025-11-25', 14, 8, '2025-10-21 07:52:19.291817', '2025-10-21 07:52:19.291817') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (1.4ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Healthcare Management System', 95000.0, 'negotiation', '2025-11-30', 15, 9, '2025-10-21 07:52:19.296022', '2025-10-21 07:52:19.296022') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (2.0ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Retail POS System', 60000.0, 'closed_won', '2025-10-11', 16, 10, '2025-10-21 07:52:19.301621', '2025-10-21 07:52:19.301621') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mDeal Create (2.7ms)[0m  [1m[32mINSERT INTO "deals" ("title", "amount", "stage", "expected_close_date", "contact_id", "company_id", "created_at", "updated_at") VALUES ('Inventory Management Software', 45000.0, 'closed_lost', '2025-10-06', 16, 10, '2025-10-21 07:52:19.307722', '2025-10-21 07:52:19.307722') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (1.9ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('call', 'Follow up call about Enterprise Software License proposal', '2025-10-23 07:52:19.314651', 'pending', 'Deal', 10, '2025-10-21 07:52:19.330405', '2025-10-21 07:52:19.330405') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (3.1ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('meeting', 'Demo presentation for Cloud Infrastructure', '2025-10-26 07:52:19.314721', 'pending', 'Deal', 11, '2025-10-21 07:52:19.337767', '2025-10-21 07:52:19.337767') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (3.0ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('email', 'Send marketing campaign proposal', '2025-10-22 07:52:19.314736', 'pending', 'Deal', 12, '2025-10-21 07:52:19.346916', '2025-10-21 07:52:19.346916') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.6ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('task', 'Prepare contract documents', '2025-10-24 07:52:19.314748', 'pending', 'Deal', 15, '2025-10-21 07:52:19.356324', '2025-10-21 07:52:19.356324') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.8ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('call', 'Introduction call with new lead', '2025-10-21 07:52:19.314993', 'pending', 'Company', 8, '2025-10-21 07:52:19.364073', '2025-10-21 07:52:19.364073') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (3.1ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('meeting', 'Quarterly business review', '2025-10-28 07:52:19.314995', 'pending', 'Company', 6, '2025-10-21 07:52:19.370829', '2025-10-21 07:52:19.370829') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.8ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('email', 'Send thank you email after meeting', '2025-10-20 07:52:19.315011', 'completed', 'Contact', 9, '2025-10-21 07:52:19.379297', '2025-10-21 07:52:19.379297') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mActivity Create (2.6ms)[0m  [1m[32mINSERT INTO "activities" ("activity_type", "description", "due_date", "status", "activitable_type", "activitable_id", "created_at", "updated_at") VALUES ('call', 'Check-in call with client', '2025-10-19 07:52:19.315023', 'completed', 'Contact', 12, '2025-10-21 07:52:19.386720', '2025-10-21 07:52:19.386720') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (3.1ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Client expressed strong interest in enterprise features. Mentioned they have budget approved for Q1.', 'Deal', 10, '2025-10-21 07:52:19.396299', '2025-10-21 07:52:19.396299') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (1.6ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Need to follow up on technical requirements. CTO wants to see scalability benchmarks.', 'Deal', 11, '2025-10-21 07:52:19.403624', '2025-10-21 07:52:19.403624') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (2.2ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Company is expanding to 3 new markets this year. Great opportunity for additional services.', 'Company', 6, '2025-10-21 07:52:19.408321', '2025-10-21 07:52:19.408321') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (1.6ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Contact mentioned they''re evaluating 2 other vendors. Need to emphasize our unique value proposition.', 'Contact', 11, '2025-10-21 07:52:19.413037', '2025-10-21 07:52:19.413037') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (2.5ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Meeting went very well. They want to move forward with the proposal. Waiting on legal review.', 'Deal', 13, '2025-10-21 07:52:19.418340', '2025-10-21 07:52:19.418340') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (1.3ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Client requested case studies from similar healthcare organizations.', 'Deal', 16, '2025-10-21 07:52:19.424619', '2025-10-21 07:52:19.424619') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (1.3ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('Lost deal due to budget constraints. Keep warm for potential opportunity next quarter.', 'Deal', 18, '2025-10-21 07:52:19.428782', '2025-10-21 07:52:19.428782') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Crm'*/[0m
+  [1m[36mNote Create (1.7ms)[0m  [1m[32mINSERT INTO "notes" ("content", "notable_type", "notable_id", "created_at", "updated_at") VALUES ('New decision maker introduced. Need to schedule separate meeting to present our solution.', 'Company', 9, '2025-10-21 07:52:19.433019', '2025-10-21 07:52:19.433019') RETURNING "id" /*application='Crm'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Crm'*/[0m
+  [1m[36mCompany Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*application='Crm'*/[0m
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*application='Crm'*/[0m
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*application='Crm'*/[0m
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*application='Crm'*/[0m
+  [1m[36mNote Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "notes" /*application='Crm'*/[0m
+  [1m[36mCompany Count (2.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*application='Crm'*/[0m
+  [1m[36mCompany Load (0.1ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."id" ASC LIMIT 1 /*application='Crm'*/[0m
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+  [1m[36mCompany Load (0.3ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 1 OFFSET 0 /*application='Crm'*/[0m
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 10 /*application='Crm'*/[0m
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 10 /*application='Crm'*/[0m
+[MCP] Tool execution [SUCCESS]: list_companies | Params: {limit: 1, offset: 0} | Latency: 530.23ms
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+Started GET "/" for ::1 at 2025-10-21 11:05:24 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (3.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.2ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 21.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 23.0ms | GC: 0.0ms)
+Completed 200 OK in 343ms (Views: 25.1ms | ActiveRecord: 4.9ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+[MCP] Registered 16 tools
+[MCP] Starting MCP Server...
+[MCP] Server: crm-mcp-server v0.1.0
+[MCP] Listening on stdio
+  [1m[36mCompany Load (0.4ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 1 OFFSET 0 /*application='Crm'*/[0m
+  ↳ lib/mcp/serializers/company_serializer.rb:23:in 'Enumerable#map'
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" WHERE "contacts"."company_id" = 10 /*application='Crm'*/[0m
+  ↳ lib/mcp/serializers/company_serializer.rb:23:in 'Enumerable#map'
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."company_id" = 10 /*application='Crm'*/[0m
+  ↳ lib/mcp/serializers/company_serializer.rb:23:in 'Enumerable#map'
+[MCP] Tool execution [SUCCESS]: list_companies | Params: {limit: 1, offset: 0} | Latency: 302.37ms
+  [1m[36mContact Load (0.3ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 1 OFFSET 0 /*application='Crm'*/[0m
+  ↳ lib/mcp/serializers/contact_serializer.rb:24:in 'Enumerable#map'
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = 10 /*application='Crm'*/[0m
+  ↳ lib/mcp/serializers/contact_serializer.rb:24:in 'Enumerable#map'
+  [1m[36mDeal Load (0.9ms)[0m  [1m[34mSELECT "deals".* FROM "deals" WHERE "deals"."contact_id" = 16 /*application='Crm'*/[0m
+  ↳ lib/mcp/serializers/contact_serializer.rb:24:in 'Enumerable#map'
+[MCP] Tool execution [SUCCESS]: list_contacts | Params: {limit: 1, offset: 0} | Latency: 24.06ms
+Started GET "/" for ::1 at 2025-10-21 12:46:11 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (4.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.3ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.2ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.2ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.2ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 45.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 50.5ms | GC: 0.0ms)
+Completed 200 OK in 629ms (Views: 62.5ms | ActiveRecord: 6.7ms (14 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for ::1 at 2025-10-21 12:47:06 +0200
+Processing by HomeController#dashboard as HTML
+  [1m[36mCompany Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "companies" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:3:in 'HomeController#dashboard'
+  [1m[36mContact Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "contacts" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:4:in 'HomeController#dashboard'
+  [1m[36mDeal Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:5:in 'HomeController#dashboard'
+  [1m[36mActivity Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "activities" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:6:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:13:in 'HomeController#dashboard'
+  [1m[36mDeal Sum (0.1ms)[0m  [1m[34mSELECT SUM("deals"."amount") FROM "deals" WHERE "deals"."stage" = 'closed_won' /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/controllers/home_controller.rb:14:in 'HomeController#dashboard'
+  Rendering layout layouts/application.html.erb
+  Rendering home/dashboard.html.erb within layouts/application
+  [1m[36mCompany Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "companies" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:135
+  [1m[36mCompany Load (0.1ms)[0m  [1m[34mSELECT "companies".* FROM "companies" ORDER BY "companies"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:136
+  [1m[36mContact Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "contacts" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:163
+  [1m[36mContact Load (0.1ms)[0m  [1m[34mSELECT "contacts".* FROM "contacts" ORDER BY "contacts"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:164
+  [1m[36mDeal Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "deals" LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:194
+  [1m[36mDeal Load (0.1ms)[0m  [1m[34mSELECT "deals".* FROM "deals" ORDER BY "deals"."created_at" DESC LIMIT 5 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:195
+  [1m[36mActivity Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "activities" WHERE "activities"."status" = 'pending' LIMIT 1 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:224
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."status" = 'pending' ORDER BY "activities"."due_date" ASC LIMIT 10 /*action='dashboard',application='Crm',controller='home'*/[0m
+  ↳ app/views/home/dashboard.html.erb:225
+  Rendered home/dashboard.html.erb within layouts/application (Duration: 13.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 14.4ms | GC: 0.0ms)
+Completed 200 OK in 268ms (Views: 14.3ms | ActiveRecord: 1.2ms (14 queries, 0 cached) | GC: 0.0ms)
+
+

@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2025-10-16T20:30:00Z",
+  "current_feature": "servidor-mcp",
+  "features_by_name": {
+    "servidor-mcp": {
+      "name": "servidor-mcp",
+      "description": "Servidor MCP para el CRM que permitirá integración y comunicación con sistemas externos mediante el protocolo Model Context Protocol.",
+      "state": "active",
+      "created_at": "2025-10-16T18:45:00Z",
+      "updated_at": "2025-10-16T20:30:00Z",
+      "workflow": {
+        "current_stage": "completed",
+        "next_recommended_command": "/feature:archivar servidor-mcp"
+      },
+      "stages": {
+        "jtbd": {
+          "completed": true,
+          "started_at": "2025-10-16T18:45:00Z",
+          "completed_at": "2025-10-16T18:50:00Z"
+        },
+        "prd": {
+          "completed": true,
+          "started_at": "2025-10-16T18:50:00Z",
+          "completed_at": "2025-10-16T18:55:00Z"
+        },
+        "plan": {
+          "completed": true,
+          "started_at": "2025-10-16T18:55:00Z",
+          "completed_at": "2025-10-16T19:00:00Z"
+        },
+        "plan_organized": {
+          "completed": true,
+          "started_at": "2025-10-16T19:00:00Z",
+          "completed_at": "2025-10-16T19:05:00Z"
+        }
+      },
+      "documents": {
+        "feature.md": {
+          "exists": true,
+          "created_at": "2025-10-16T18:45:00Z"
+        },
+        "JTBD.md": {
+          "exists": true,
+          "created_at": "2025-10-16T18:50:00Z"
+        },
+        "PRD.md": {
+          "exists": true,
+          "created_at": "2025-10-16T18:55:00Z"
+        },
+        "plan.md": {
+          "exists": true,
+          "created_at": "2025-10-16T19:00:00Z"
+        },
+        "plan-organized.md": {
+          "exists": true,
+          "created_at": "2025-10-16T19:05:00Z"
+        }
+      },
+      "implementation": {
+        "started_at": "2025-10-16T19:10:00Z",
+        "completed_at": "2025-10-16T20:30:00Z",
+        "last_implementation": "2025-10-16T20:30:00Z",
+        "total_tasks": 137,
+        "completed_tasks": 137
+      }
+    }
+  }
+}

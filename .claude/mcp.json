@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "crm-server": {
+      "command": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "Set-Location 'C:\\Curso AI CODE\\CRM'; & 'C:\\Ruby34-x64\\bin\\bundle.bat' exec rails mcp:server"
+      ],
+      "env": {
+        "RAILS_ENV": "development"
+      }
+    }
+  }
+}

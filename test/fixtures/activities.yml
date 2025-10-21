@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  activity_type: MyString
+  description: MyText
+  due_date: 2025-10-09 20:23:13
+  status: MyString
+  activitable: one
+  activitable_type: Activitable
+
+two:
+  activity_type: MyString
+  description: MyText
+  due_date: 2025-10-09 20:23:13
+  status: MyString
+  activitable: two
+  activitable_type: Activitable
